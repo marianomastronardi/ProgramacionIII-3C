@@ -1,4 +1,5 @@
 <?php
+require_once '../clases/alumno.php';
 
 //fopen
 function getReadOnlyFile($file){
@@ -91,15 +92,37 @@ function deleteFile($filename){
 }
 
 //create
-function createFileFromClassArray($filename, $array, $delimiter = '*'){
+function createFileFromStringArray($filename, $array){
     $file = getWriteAppendFile($filename);
     $str = "";
-    foreach($array as $values){
-        foreach($values as $key=>$value){
-             $str = $str.$value.$delimiter;
-        }
-        $str = $str.'<br>';
-    }
-    return fwrite($file, $str);
+
+    foreach($array as $value) $str = $str.$value."\n";
+
+    fwrite($file, $str);
+    
+    return fclose($file);
 }
+
+function getAlumnosArrayFromFile($filename){
+    $file = getReadOnlyFile($filename);
+    $alumnos = array();
+
+    while(!feof($file)){
+        $linea = fgets($file);
+
+        $arrAlumno = explode(';', $linea);
+    
+    if (count($arrAlumno) > 1) {
+        //var_dump($arrAlumno);
+        //echo "<br>";
+        $alumno = new Alumno($arrAlumno[0], $arrAlumno[1], $arrAlumno[2], $arrAlumno[3], $arrAlumno[5]);
+        array_push($alumnos, $alumno);
+    }
+    }
+
+    fclose($file);
+
+    return $alumnos;
+}
+
 ?>
