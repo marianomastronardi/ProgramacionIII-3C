@@ -49,6 +49,7 @@ function LeerArchivo($file, $len = 0)
     else{
         $res = "El archivo no ha sido abierto";
     }
+    $res = fclose($file);
 
     return $res;
 }
@@ -72,13 +73,16 @@ function fillArrayFromFile($filename, $array, $delimiter = '*'){
 }
 
 //fwrite/fputs
-function escribirArchivo($filename, $text, $len = 0){
-    $res = null;
-    $file = getRemoveAndWriteFile($filename);
+function escribirArchivo($filename, $text, $len = null){
+    $file = getWriteAppendFile($filename);
     if(isset($file)){
-        $res = fwrite($file, $text, $len > 0 ? $len : null);
+        if(isset($len)){
+            fwrite($file, $text.PHP_EOL, $len);
+        }else{
+            fwrite($file, $text.PHP_EOL);
+        }
     }
-    return $res;
+    return fclose($file);
 }
 
 //copy
@@ -96,10 +100,12 @@ function createFileFromStringArray($filename, $array){
     $file = getWriteAppendFile($filename);
     $str = "";
 
-    foreach($array as $value) $str = $str.$value."\n";
+    //foreach($array as $value) $str = $str.$value."\n";
 
-    fwrite($file, $str);
+    //fwrite($file, $str);
     
+    foreach($array as $value) fwrite($file, $str.$value, PHP_EOL);
+
     return fclose($file);
 }
 
@@ -125,4 +131,25 @@ function getAlumnosArrayFromFile($filename){
     return $alumnos;
 }
 
-?>
+function findAlumnoFromFile($filename, $value){
+    $file = getReadOnlyFile($filename);
+    $alumno = "";
+
+    while(!feof($file)){
+        $linea = fgets($file);
+
+        $arrValues = explode(';', $linea);
+    
+        if (count($arrValues) > 1) {
+            
+            for($i = 0; $i < count($arrValues); $i++){
+                if($arrValues[$i] === $value){
+                    $alumno = new Alumno($arrValues[0], $arrValues[1], $arrValues[2], $arrValues[3], $arrValues[5]);
+                    break;
+                }
+            }
+        }
+    }
+           
+    return $alumno;
+}

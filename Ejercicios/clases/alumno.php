@@ -1,6 +1,7 @@
 <?php
 
 require_once '../clases/persona.php';
+require_once '../files/fileHandler.php';
 
 class Alumno extends Persona{
 
