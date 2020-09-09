@@ -2,20 +2,19 @@
 
 class Archivos
 {
-    
+
 
     public static function serializeObj($ruta, $obj)
     {
-        if(file_exists('../files/'.$ruta)){
+        if (file_exists('../files/'.$ruta)) {
             $ar = fopen('../files/'.$ruta, 'a');
             fwrite($ar, serialize($obj) . PHP_EOL);
             fclose($ar);
-        }else{
+        } else {
             $ar = fopen('../files/'.$ruta, 'w');
             fwrite($ar, serialize($obj) . PHP_EOL);
             fclose($ar);
         }
-        
     }
 
     public static function unserializeObj($ruta)
@@ -37,21 +36,20 @@ class Archivos
 
     static function getJSON($ruta)
     {
-       if (file_exists('../files/'.$ruta)) {
+        if (file_exists('../files/'.$ruta)) {
             $ar = fopen('../files/'.$ruta, 'r');
             //echo fgets($ar).PHP_EOL;
             //var_dump(json_decode(fgets($ar)));
             $lista = json_decode(fgets($ar));
             fclose($ar);
             //var_dump($lista);
-            if(isset($lista)){
+            if (isset($lista)) {
                 return $lista;
-            }else{
-                echo "La lista esta vacia".PHP_EOL;
+            } else {
+                echo "La lista esta vacia" . PHP_EOL;
             }
-            
         } else {
-            echo 'El archivo no existe'.PHP_EOL;
+            echo 'El archivo no existe' . PHP_EOL;
         }
     }
 
@@ -60,18 +58,12 @@ class Archivos
     {
         $lista = Archivos::getJSON($filename);
 
-        if(isset($lista)){
-            $ar = fopen('../files/' . $filename, 'a');
-            array_push($lista, $obj);
-            fwrite($ar, json_encode($lista));
-            fclose($ar);
-        }else{
+        if (!isset($lista)) {
             $lista = array();
-            $ar = fopen('../files/' . $filename, 'w');
-            array_push($lista, $obj);
-            fwrite($ar, json_encode($lista));
-            fclose($ar);
         }
-        
+        $ar = fopen('../files/'.$filename, 'w');
+        array_push($lista, $obj);
+        fwrite($ar, json_encode($lista));
+        fclose($ar);
     }
 }
