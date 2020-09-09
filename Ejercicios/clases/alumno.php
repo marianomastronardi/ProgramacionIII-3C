@@ -5,7 +5,7 @@ require_once '../files/fileHandler.php';
 
 class Alumno extends Persona{
 
-    private $_legajo;
+    public $_legajo;
     private $_cursos;
     private $_cursada;
 

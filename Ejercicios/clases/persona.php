@@ -2,12 +2,12 @@
 
 abstract class Persona
 {
-    protected $_nombre;
-    protected $_apellido;
-    protected $_documento;
-    protected $_fechaNacimiento;
-    protected $_edad;
-    protected $_delimiter;
+    public $_nombre;
+    public $_apellido;
+    public $_documento;
+    public $_fechaNacimiento;
+    public $_edad;
+    public $_delimiter;
 
     public function __construct($nombre, $apellido, $documento, $fechaNacimiento, $edad = null)
     {
