@@ -6,30 +6,41 @@ class Archivos
 
     public static function serializeObj($ruta, $obj)
     {
+        $res = "";
         if (file_exists('../files/'.$ruta)) {
             $ar = fopen('../files/'.$ruta, 'a');
-            fwrite($ar, serialize($obj) . PHP_EOL);
+            $res = fwrite($ar, serialize($obj) . PHP_EOL); 
             fclose($ar);
         } else {
             $ar = fopen('../files/'.$ruta, 'w');
-            fwrite($ar, serialize($obj) . PHP_EOL);
+            $res = fwrite($ar, serialize($obj) . PHP_EOL);
             fclose($ar);
+        }
+        if($res){
+            echo "Archivo serializado correctamente" . PHP_EOL;
+        }else{
+            echo "No se ha podido serializar el objeto" . PHP_EOL;
         }
     }
 
     public static function unserializeObj($ruta)
     {
+        
+    if (file_exists('../files/'.$ruta)){
         $lista = array();
         $ar = fopen('../files/'.$ruta, 'r');
-
-        while (!feof($ar)) {
-            $obj = unserialize(fgets($ar));
-            if ($obj != null)
-                array_push($lista, $obj);
-        }
-
-        fclose($ar);
-        return $lista;
+            while (!feof($ar)) {
+                $obj = unserialize(fgets($ar));
+                if ($obj != null)
+                    array_push($lista, $obj);
+            }
+            fclose($ar);
+            if(isset($lista))
+                return $lista;
+    }else{
+        echo 'El archivo no existe' . PHP_EOL;
+    }
+        
     }
 
     //get JSON
@@ -38,11 +49,8 @@ class Archivos
     {
         if (file_exists('../files/'.$ruta)) {
             $ar = fopen('../files/'.$ruta, 'r');
-            //echo fgets($ar).PHP_EOL;
-            //var_dump(json_decode(fgets($ar)));
             $lista = json_decode(fgets($ar));
             fclose($ar);
-            //var_dump($lista);
             if (isset($lista)) {
                 return $lista;
             } else {

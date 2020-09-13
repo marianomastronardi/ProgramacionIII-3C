@@ -6,8 +6,8 @@ require_once '../files/fileHandler.php';
 class Alumno extends Persona{
 
     public $_legajo;
-    private $_cursos;
-    private $_cursada;
+    //private $_cursos;
+    //private $_cursada;
 
     public function __construct($nombre, $apellido, $documento, $fechaNacimiento, $legajo, $edad = null)
     {
