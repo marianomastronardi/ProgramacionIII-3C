@@ -3,6 +3,7 @@
 require_once './materia.php';
 require_once './usuario.php';
 require_once './profesor.php';
+require_once './token.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $path = $_SERVER['PATH_INFO'] ?? 0;
@@ -11,6 +12,10 @@ $path = $_SERVER['PATH_INFO'] ?? 0;
 switch ($method) {
     case 'POST';
         switch ($path) {
+            case '/token':
+                $jwt = $_SERVER['HTTP_TOKEN'];
+               echo iToken::decodeUserToken($jwt);
+            break;
 
             case '/usuario':
 
@@ -67,7 +72,9 @@ switch ($method) {
 
     case 'GET':
         switch ($path) {
-
+            case '/token':
+                echo iToken::encodeUserToken($_GET['email'], $_GET['pass']);
+            break;
             case '/profesor':
                 //$nombre = $_GET['nombre'] ?? '';
                 // $legajo = $_GET['legajo'] ?? '';
