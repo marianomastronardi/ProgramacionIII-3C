@@ -1,0 +1,2 @@
+O:7:"Usuario":2:{s:6:"_email";s:15:"luisa@gmail.com";s:6:"_clave";s:6:"123456";}
+O:7:"Usuario":2:{s:6:"_email";s:15:"mario@gmail.com";s:6:"_clave";s:6:"665544";}

@@ -14,36 +14,46 @@ switch ($method) {
         switch ($path) {
             case '/token':
                 $jwt = $_SERVER['HTTP_TOKEN'];
-               echo iToken::decodeUserToken($jwt);
-            break;
+                echo iToken::decodeUserToken($jwt);
+                break;
 
             case '/usuario':
 
                 $email = $_POST['email'] ?? '';
                 $clave = $_POST['clave'] ?? '';
+                if (strlen($email) > 0 && strlen($clave) > 0) {
+                    $usuario = new Usuario($email, $clave);
 
-                $usuario = new Usuario($email, $clave);
-
-                if ($usuario->SaveUsuarioAsJSON('users.json')) {
-                    echo 'Usuario guardado correctamente con formato JSON';
-                } else {
-                    echo 'Error al guardar el Usuario con formato JSON';
+                    $usuario->SaveSerializedUser('users.txt');
+                    $usuario->SaveUsuarioAsJSON('users.json');
+                    //echo $usuario->getToken();
                 }
                 break;
+            case '/login':
+                $email = $_POST['email'] ?? '';
+                $clave = $_POST['clave'] ?? '';
+                if (strlen($email) > 0 && strlen($clave) > 0) {
+                    $usuario = new Usuario($email, $clave);
 
+                    //$jwt = $usuario->LogIn('users.json', true);
+                    echo $usuario->LogIn('users.json', true);
+                    //echo !$jwt ? "Usuario o clave invalida" : $jwt;
+                }
                 break;
             case '/materia':
 
                 $nombre = $_POST['nombre'] ?? '';
                 $cuatrimestre = $_POST['cuatrimestre'] ?? '';
+                $token = $_SERVER['HTTP_TOKEN'] ?? '';
 
-                $materia = new Materia($nombre, $cuatrimestre);
-
-                if ($materia->SaveMateriaAsJSON('materias.json')) {
-                    echo 'Materia guardada correctamente con formato JSON';
-                } else {
-                    echo 'Error al guardar la Materia con formato JSON';
+                if (strlen($token) > 0) {
+                    //validar token valido
+                    if (iToken::decodeUserToken($token)) {
+                        $materia = new Materia($nombre, $cuatrimestre);
+                        $materia->SaveMateriaAsJSON('materias.json');
+                    }
                 }
+
                 break;
             case '/profesor':
                 $nombre = $_POST['nombre'] ?? '';
@@ -51,16 +61,16 @@ switch ($method) {
 
                 $profesor = new Profesor($nombre, $legajo);
 
-                if($profesor->ValidarLegajoAsJSON('profesores.json', $profesor->_legajo)){
+                if ($profesor->ValidarLegajoAsJSON('profesores.json', $profesor->_legajo)) {
                     if ($profesor->SaveUsuarioAsJSON('profesores.json')) {
                         echo 'Profesor guardado correctamente con formato JSON';
                     } else {
                         echo 'Error al guardar el Profesor con formato JSON';
                     }
-                }else{
+                } else {
                     echo 'El legajo ya existe. No se pudo guardar el profesor.';
                 }
-                
+
                 break;
 
 
@@ -74,14 +84,17 @@ switch ($method) {
         switch ($path) {
             case '/token':
                 echo iToken::encodeUserToken($_GET['email'], $_GET['pass']);
-            break;
+                break;
+            case '/usuario':
+
+                break;
             case '/profesor':
                 //$nombre = $_GET['nombre'] ?? '';
                 // $legajo = $_GET['legajo'] ?? '';
                 $ruta = 'profesores.json';
-               
+
                 $lista = FileHandler::getJson($ruta);
-                
+
                 if ($lista) {
                     echo json_encode($lista);/*
                     foreach ($lista as $value) {
@@ -97,7 +110,7 @@ switch ($method) {
                         }
                         echo $value->_nombre . ' ' . $value->_legajo . PHP_EOL;
                     }*/
-                   // echo json_decode($lista);
+                    // echo json_decode($lista);
                 } else {
                     echo 'No hay datos en la lista o no hay coincidencias con la busqueda';
                 }
@@ -112,7 +125,7 @@ switch ($method) {
 
                 if ($lista) {
                     echo json_encode($lista);
-                  /*  foreach ($lista as $value) {
+                    /*  foreach ($lista as $value) {
                         if ($value->_nombre == $nombre) {
                             //array_push($lista, $value);
                             $ret = $ret.' '.$value->_nombre.' '.$value->_cuatrimestre;    
@@ -140,7 +153,7 @@ switch ($method) {
 
                 if ($lista) {
                     echo json_encode($lista);
-                   /* foreach ($lista as $value) {
+                    /* foreach ($lista as $value) {
                         if ($value->_email == $email) {
                             //array_push($lista, $value);
                             $ret = $ret.' '.$value->_email.' '.$value->_clave;    

@@ -32,7 +32,7 @@ class Materia{
 
     function SaveMateriaAsJSON($ruta){
         $lista = FileHandler::getJson($ruta);
-        $this->_id = $lista ? count($lista) + 1 : 1;
+        $this->_id = $lista ? count($lista) + 1 : 1;//traer el ultimo ID
         return FileHandler::SaveJson($ruta,$this);
     }
 

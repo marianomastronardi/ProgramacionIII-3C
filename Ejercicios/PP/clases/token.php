@@ -5,7 +5,7 @@ require_once '../vendor/autoload.php';
 
 class iToken{
   
-static $_key = "secret_key";
+static $_key = "pro3-parcial";
 
 function __get($name)
 {
@@ -35,8 +35,14 @@ static function encodeUserToken($email, $pass)
 }   
 
 static function decodeUserToken($jwt){
-    $decoded = JWT::decode($jwt, iToken::$_key, array('HS256'));
-    return json_encode((array) $decoded);
+    try {
+        $decoded = JWT::decode($jwt, iToken::$_key, array('HS256'));
+    return (array) $decoded;
+    } catch (\Throwable $th) {
+        echo "Signature Invalid";
+        return false;
+    }
+    
 }
 
 

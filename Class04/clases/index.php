@@ -18,7 +18,6 @@ switch ($method) {
                 $nombre = $_POST['nombre'];
                 Archivo::imageHandler($nombre, $_FILES);
                 break;
-
             default:
                 echo 'Path incorrecto';
                 break;

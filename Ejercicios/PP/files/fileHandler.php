@@ -14,11 +14,11 @@ class FileHandler{
             $res = fwrite($ar, serialize($obj) . PHP_EOL);
             fclose($ar);
         }
-        if($res){
+        /*if($res){
             echo "Archivo serializado correctamente" . PHP_EOL;
         }else{
             echo "No se ha podido serializar el objeto" . PHP_EOL;
-        }
+        }*/
     }
 
     public static function unserializeObj($ruta)
@@ -35,9 +35,9 @@ class FileHandler{
             fclose($ar);
             if(isset($lista))
                 return $lista;
-    }else{
+    }/*else{
         echo 'El archivo no existe' . PHP_EOL;
-    }
+    }*/
         
     }
 
