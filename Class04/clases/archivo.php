@@ -106,7 +106,7 @@ class Archivo
 
     static function checkSizeInMB($maxSize, $size)
     {
-        return $maxSize <= (int)1 / 1024 / 1024;
+        return $maxSize <= (int)$size / 1024 / 1024;
     }
 
     static function isImage($ext)
