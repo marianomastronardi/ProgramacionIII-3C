@@ -2,9 +2,10 @@
 
 class Archivo
 {
-    static $_imgdir = '../img/';
-    static $_bkpdir = '../bkp/';
-    static $_filedir = '../files/';
+    static $_imgdir = './img/';
+    static $_bkpdir = './bkp/';
+    static $_filedir = './files/';
+    static $_dir = './archivos/';
 
     public static function serializeObj($ruta, $obj)
     {
@@ -48,8 +49,8 @@ class Archivo
 
     static function getJSON($ruta)
     {
-        if (file_exists(Archivo::$_filedir . $ruta)) {
-            $ar = fopen(Archivo::$_filedir . $ruta, 'r');
+        if (file_exists(Archivo::$_dir . $ruta)) {
+            $ar = fopen(Archivo::$_dir . $ruta, 'r');
             $lista = json_decode(fgets($ar));
             fclose($ar);
             if (isset($lista)) {
@@ -65,7 +66,7 @@ class Archivo
     //guardar en JSON
     static function SaveJson($filename, $obj)
     {
-        $lista = Archivos::getJSON($filename);
+        $lista = Archivo::getJSON($filename);
 
         if (!isset($lista)) {
             $lista = array();
@@ -76,11 +77,31 @@ class Archivo
         fclose($ar);
     }
 
+    static function changePhotoJson($filename, $email, $newPhoto)
+    {
+        $lista = Archivo::getJSON($filename);
+        if (isset($lista)) {
+            foreach ($lista as $value) {
+                if($value->_email == $email){
+                    Archivo::deleteFile($value->_foto);
+                    var_dump($value->_foto);
+                    $value->_foto = $newPhoto;
+                    var_dump($value->_foto);
+                break;
+                }
+            }
+
+        $ar = fopen(Archivo::$_dir . $filename, 'w');
+        
+        fwrite($ar, json_encode($lista));
+        fclose($ar);
+        }
+    }
+
     static function imageHandler($nombre, $obj)
     {
         Archivo::checkIsDir(Archivo::$_imgdir);
         Archivo::checkIsDir(Archivo::$_bkpdir);
-        echo 'paso 1';
         foreach ($obj as $value) {
             $ext = Archivo::getExtensionFile('/', $value['type']);
             $origen = $value['tmp_name'];
@@ -93,6 +114,7 @@ class Archivo
                 } else {
                     if (move_uploaded_file($origen, $destino)) {
                         echo "Archivo $nombre subido correctamente";
+                        return $nombre . $rand .'.'. $ext;
                     } else {
                         echo "Error al subir el archivo $nombre";
                     }

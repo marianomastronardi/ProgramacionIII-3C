@@ -1,6 +1,6 @@
 <?php
 
-require_once '../fileHandler.php';
+require_once './fileHandler.php';
 
 class AsignacionMateria{
 

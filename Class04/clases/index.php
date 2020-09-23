@@ -15,8 +15,10 @@ switch ($method) {
     case 'POST':
         switch ($path) {
             case '/upload':
-                $nombre = $_POST['nombre'];
-                Archivo::imageHandler($nombre, $_FILES);
+                if (isset($_POST['nombre']) && isset($_FILES)) {
+                    $nombre = $_POST['nombre'];
+                    Archivo::imageHandler($nombre, $_FILES);
+                }
                 break;
             default:
                 echo 'Path incorrecto';
@@ -27,11 +29,14 @@ switch ($method) {
     case 'GET':
         switch ($path) {
             case '/upload':
-                $nombre = $_GET['path'];
-                Archivo::deleteFile($nombre);
-
+                //var_dump($_GET['nombre']);
+                if (isset($_GET['nombre'])) {
+                  //  echo 'paso1.1';
+                    $nombre = $_GET['nombre'];
+                    Archivo::deleteFile($nombre);
+                }
                 break;
-            
+
             default:
                 echo 'Path incorrecto';
                 break;
