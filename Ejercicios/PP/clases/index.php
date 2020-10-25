@@ -74,9 +74,18 @@ switch ($method) {
                 if (strlen($token) > 0) {
                     if (iToken::decodeUserToken($token)) {
                         if (strlen($legajo) > 0 && strlen($id) > 0 && strlen($turno) > 0) {
-                            $asignacionMateria = new AsignacionMateria($legajo, $id, $turno);
-
-                            $asignacionMateria->saveAsignacionMateriaJSON('materias-profesores.json');
+                            
+                            if(Profesor::verifyLegajo('profesores.json', $legajo)){
+                                if(Materia::verifyId('materias.json', $id)){
+                                    $asignacionMateria = new AsignacionMateria($legajo, $id, $turno);
+                                    $asignacionMateria->saveAsignacionMateriaJSON('materias-profesores.json');
+                                }else{
+                                    echo json_encode(array('message' => 'El id de Materia no existe'));
+                                }
+                            }else{
+                                echo json_encode(array('message' => 'El legajo de profesor no existe'));
+                            }
+                            
                         }
                     }
                 }

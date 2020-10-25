@@ -1,6 +1,7 @@
 <?php
 
 require_once './fileHandler.php';
+require_once '../PDO/AccesoDatos.php';
 
 class Profesor{
 
@@ -43,6 +44,32 @@ class Profesor{
 
     function SaveUsuarioAsJSON($ruta){
         return FileHandler::SaveJson($ruta,$this);
+    }
+
+    public static function getProfesor()
+    {
+        $pdo = AccesoDatos::dameUnObjetoAcceso();
+        $query = $pdo->RetornarConsulta("select nombre, legajo from profesores");
+        if ($query->execute()) {
+/*             while ($fila = $query->fetch()) {
+              print_r($fila);
+            } */
+            while($fila = $query->fetchAll(PDO::FETCH_CLASS, "Profesor")){
+                print_r($fila->nombre);
+                echo '<br/>';
+            }
+          }
+    }
+
+    public static function addProfesor($nombre, $legajo){
+        $pdo = AccesoDatos::dameUnObjetoAcceso();
+        $sentencia = $pdo->objetoPDO->prepare('INSERT INTO PROFESORES (nombre, legajo) VALUES (:nombre, :legajo)');
+        $sentencia->bindParam(':nombre', $nombre);
+        $sentencia->bindParam(':legajo', $legajo);
+
+/*         if($sentencia->execute()){
+            echo 'Profesor guardado correctamente';
+        }; */
     }
 }
 

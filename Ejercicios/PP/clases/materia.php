@@ -1,6 +1,6 @@
 <?php
 
-require_once '../fileHandler.php';
+require_once '../files/fileHandler.php';
 
 class Materia{
 
@@ -53,6 +53,18 @@ class Materia{
         
         if($id != -1)$this->_id = $id + 1;
         return $id;
+    }
+
+    static function verifyId($ruta, $id){
+        $lista = FileHandler::getJSON($ruta);
+        if($lista){
+            foreach ($lista as $value) {
+                if($id == $value->_id){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

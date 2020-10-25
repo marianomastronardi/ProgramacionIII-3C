@@ -85,7 +85,15 @@ switch ($method) {
                 }
 
                 break;
-
+                case '/addProfesorDB':
+                    $nombre = $_POST['nombre'] ?? '';
+                    $legajo = $_POST['legajo'] ?? '';
+                    if (strlen($token) > 0) {
+                        if (iToken::decodeUserToken($token)) {
+                            Profesor::addProfesor($nombre, $legajo);
+                        }
+                    }
+                    break;       
             case '/asignacion':
                 $legajo = $_POST['legajo'] ?? '';
                 $id = $_POST['id'] ?? '';
@@ -138,6 +146,14 @@ switch ($method) {
                     }
                 }
                 break;
+            case '/profesorDB':
+                   
+                    if (strlen($token) > 0) {
+                        if (iToken::decodeUserToken($token)) {
+                            Profesor::getProfesor();
+                        }
+                    }
+                    break;    
 
             case '/asignacion':
                 $ruta = 'materias-profesores.json';

@@ -44,6 +44,23 @@ class Profesor{
     function SaveUsuarioAsJSON($ruta){
         return FileHandler::SaveJson($ruta,$this);
     }
+
+    static function verifyLegajo($ruta, $legajo){
+        try {
+            $lista = FileHandler::getJSON($ruta);            
+        if($lista){
+            foreach ($lista as $value) {
+                if($legajo == $value->_legajo){
+                    return true;
+                }
+            }
+        }
+        return false;
+        } catch (\Throwable $th) {
+            echo json_encode(array('Exception' => 'Error al verificar el legajo'));
+        }
+        
+    }
 }
 
 ?>
