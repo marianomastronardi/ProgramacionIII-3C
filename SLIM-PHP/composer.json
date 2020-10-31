@@ -1,0 +1,21 @@
+{
+    "name": "mgmastronardi/slim-php",
+    "description": "slim",
+    "authors": [
+        {
+            "name": "Mariano",
+            "email": "marianogarciamastronardi@yahoo.com.ar"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Seguridad\\": "clases",
+            "DAO\\": "clases"
+        }
+    },
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.2",
+        "firebase/php-jwt": "^5.2"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "name": "mgmastronardi/class06",
+    "description": "slim",
+    "authors": [
+        {
+            "name": "Mariano",
+            "email": "marianogarciamastronardi@yahoo.com.ar"
+        }
+    ],
+    "require": {}
+}
