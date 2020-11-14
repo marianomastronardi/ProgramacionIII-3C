@@ -38,8 +38,8 @@ class Usuario{
         $pdo = AccesoDatos::dameUnObjetoAcceso();
         $pass = password_hash($pass, PASSWORD_BCRYPT);
         $sentencia = $pdo->objetoPDO->prepare('INSERT INTO USUARIOS (email, clave) VALUES (:email, :clave)');
-        $sentencia->bindParam(':email', $email);
-        $sentencia->bindParam(':clave', $pass);
+        $sentencia->bindParam(':email', $email, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 30);
+        $sentencia->bindParam(':clave', $pass, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 100);
 
         //validaciones
         if (!Usuario::getUser($email)) {

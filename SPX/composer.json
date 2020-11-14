@@ -1,6 +1,5 @@
 {
-    "name": "mgmastronardi/slim-php",
-    "description": "slim",
+    "name": "mgmastronardi/spx",
     "authors": [
         {
             "name": "Mariano",
@@ -10,16 +9,16 @@
     "autoload": {
         "psr-4": {
             "Seguridad\\": "clases",
-            "DAO\\": "clases",
             "App\\": "src",
-            "Config\\": "config"
+            "Config\\": "config",
+            "App\\Models\\": "src/models"
         }
     },
     "require": {
+        "firebase/php-jwt": "^5.2",
         "slim/slim": "4.*",
         "slim/psr7": "^1.2",
-        "firebase/php-jwt": "^5.2",
-        "illuminate/database": "^8.13",
-        "illuminate/events": "^8.13"
+        "illuminate/database": "^8.14",
+        "illuminate/events": "^8.14"
     }
 }
