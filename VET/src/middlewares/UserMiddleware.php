@@ -9,7 +9,7 @@ use Slim\Psr7\Response;
 use Seguridad\iToken;
 use App\Models\User;
 
-class AlumnoMiddleware {
+class UserMiddleware {
 
     public function __invoke (Request $request, RequestHandler $handler) {
 
@@ -28,13 +28,12 @@ class AlumnoMiddleware {
         } else {
             $response = $handler->handle($request);
 
-            //solo alumno
-            $user = User::where('email',$jwt["email"])->first();
-            
-            if($user->tipo !== 'alunno'){
+            $user = User::find($jwt["email"]);
+            //var_dump($user);
+            if($user->tipo_usuario !== 'admin'){
                 $existingContent = $response->getBody();
                 $resp = new Response();
-                $resp->getBody()->write(json_encode(array('message' => 'Debe ser usuario alumno')));
+                $resp->getBody()->write(json_encode(array('message' => 'You must be admin user')));
                 return $resp;
             }
 

@@ -7,23 +7,21 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteCollectorProxy;
 use Seguridad\Usuario;
 use Slim\Factory\AppFactory;
-use App\Controllers\UserController;
-use App\Controllers\SubjectController;
-use App\Controllers\EnrolmentController;
 use Config\Database;
 use Illuminate\Container\Container;
-
 use \Firebase\JWT\JWT;
-use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Exception\HttpNotFoundException;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Middleware\ErrorMiddleware;
-
 use Psr\Http\Message\UploadedFileInterface;
+//Controller
+use App\Controllers\UserController;
+use App\Controllers\MascotaController;
+use App\Controllers\TurnoController;
+//Middleware
 use App\Middlewares\JsonMiddleware;
 use App\Middlewares\AuthMiddleware;
 use App\Middlewares\UserMiddleware;
-use App\Middlewares\AlumnoMiddleware;
 
 require __DIR__ . '/vendor/autoload.php';
 $container = new Container();
@@ -31,29 +29,27 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 $app->addRoutingMiddleware();
 
-$app->setBasePath("/ProgramacionIII-3C/SPX");
+$app->setBasePath("/ProgramacionIII-3C/VET");
 new Database();
 
-$app->group('/usuario', function (RouteCollectorProxy $group) {
-    $group->post('', UserController::class . ":add"); //1
-    $group->post('/{legajo}', UserController::class . ":setEntity")->add(new AuthMiddleware); //4
-})->add(new JsonMiddleware);
+$app->post('/registro', UserController::class . ":signup")
+            ->add(new JsonMiddleware); //1
 
 $app->post('/login', UserController::class . ":LogIn")->add(new JsonMiddleware); //2
 
-$app->post('/inscripcion/{idMateria}', EnrolmentController::class . ":add")
+$app->post('/tipo_mascota', MascotaController::class . ":addPetType")
             ->add(new JsonMiddleware)
-            ->add(new AuthMiddleware); //5
+            ->add(new AuthMiddleware)
+            ->add(new UserMiddleware); //3
 
- $app->group('/materias', function (RouteCollectorProxy $group) {
-    $group->get('', SubjectController::class . ":getAll");    //6
-    $group->get('/{id}', SubjectController::class . ":getOne");//7
+$app->post('/mascota', MascotaController::class . ":add")
+            ->add(new JsonMiddleware)
+            ->add(new AuthMiddleware); //4
+
+ $app->group('/turnos', function (RouteCollectorProxy $group) {
+    $group->post('/mascota', TurnoController::class . ":add"); //5
+    $group->get('/{id_usuario}', TurnoController::class . ":getByUserId");  //6 //7 //8
+    $group->get('/mascota/{id_mascota}', TurnoController::class . ":getByPet"); //9
 })->add(new JsonMiddleware)->add(new AuthMiddleware);  
-
-$app->post('/materia', SubjectController::class . ":add")
-        ->add(new JsonMiddleware)
-        ->add(new AuthMiddleware)
-        ->add(new UserMiddleware); //3
-
 
 $app->run(); 

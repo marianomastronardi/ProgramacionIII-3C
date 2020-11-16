@@ -1,0 +1,279 @@
+{
+	"info": {
+		"_postman_id": "28cad778-9490-4ffa-a1ad-5bdce4fe146f",
+		"name": "RPP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/registro",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "mmastronardi@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "tipo_usuario",
+							"value": "user",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "mmastronardi",
+							"type": "text"
+						},
+						{
+							"key": "foto",
+							"type": "file",
+							"src": "/C:/Users/mgmastronardi/Pictures/gym.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/ProgramacionIII-3C/RPP/registro",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"ProgramacionIII-3C",
+						"RPP",
+						"registro"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "jperez@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "jperez",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/ProgramacionIII-3C/RPP/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"ProgramacionIII-3C",
+						"RPP",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/vehiculo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "patente",
+							"value": "GHI",
+							"type": "text"
+						},
+						{
+							"key": "modelo",
+							"value": "2020",
+							"type": "text"
+						},
+						{
+							"key": "marca",
+							"value": "Ford",
+							"type": "text"
+						},
+						{
+							"key": "precio",
+							"value": "855400",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/ProgramacionIII-3C/RPP/vehiculo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"ProgramacionIII-3C",
+						"RPP",
+						"vehiculo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/patente/{patente}",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost/ProgramacionIII-3C/RPP/patente/dEF456",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"ProgramacionIII-3C",
+						"RPP",
+						"patente",
+						"dEF456"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/servicio",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tipo",
+							"value": "50.000 Km",
+							"type": "text"
+						},
+						{
+							"key": "precio",
+							"value": "12630",
+							"type": "text"
+						},
+						{
+							"key": "demora",
+							"value": "45",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/ProgramacionIII-3C/RPP/servicio",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"ProgramacionIII-3C",
+						"RPP",
+						"servicio"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/turno/{patente}/{fecha}/{tipo}",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost/ProgramacionIII-3C/RPP/turno/GHI789/13-12-2020/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"ProgramacionIII-3C",
+						"RPP",
+						"turno",
+						"GHI789",
+						"13-12-2020",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/stats",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tipo",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/ProgramacionIII-3C/RPP/stats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"ProgramacionIII-3C",
+						"RPP",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -14,8 +14,6 @@ class UserMiddleware {
     public function __invoke (Request $request, RequestHandler $handler) {
 
         $arr = $request->getHeader('token');
-        print_r($request->getQueryParams());
-        //$path = (substr(($request->getServerParams())['REQUEST_URI'], strrpos(($request->getServerParams())['REQUEST_URI'], '/')));
         if(count($arr) > 0) $token = $arr[0];
         $jwt = isset($token) ? iToken::decodeUserToken($token) : false; // VALIDAR EL TOKEN
 
@@ -30,10 +28,6 @@ class UserMiddleware {
         } else {
             $response = $handler->handle($request);
 
-            //solo admin
-            /* switch($path){
-                case '/materia'
-            } */
             $user = User::where('email',$jwt["email"])->first();
             
             if($user->tipo !== 'admin'){

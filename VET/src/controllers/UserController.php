@@ -17,32 +17,23 @@ class UserController
     public function signup(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
 
-        //$response->getBody()->write("Hello world from POST!");
         try {
-            $directory =  __DIR__ . '/../../img';
             $body = $request->getParsedBody();
-            $user = new User;
-            $user->email = $body["email"];
-            $user->tipo_usuario = $body["tipo_usuario"];
-            $user->password = password_hash($body["password"], PASSWORD_BCRYPT);
+            $count = User::where('email', $body["email"])->count();
 
-            //foto
-            if (!is_dir($directory)) mkdir($directory);
-            $uploadedFiles = $request->getUploadedFiles();
-            $uploadedFile = $uploadedFiles['foto'];
-            if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-                $filename = $this->moveUploadedFile($directory, $uploadedFile);
+            if ($count > 0) {
+                $response->getBody()->write(json_encode(array("rta" => "User is already exists")));
+            } else {
+                $user = new User;
+                $user->email = $body["email"];
+                $user->tipo_usuario = $body["tipo_usuario"];
+                $user->password = password_hash($body["password"], PASSWORD_BCRYPT);
+                $user->save();
+                $response->getBody()->write(json_encode(array("rta" => "User has been saved successfuly")));
             }
-            $user->foto = dirname(dirname(__DIR__, 1)) . '\\img\\' . $filename; //$body["foto"];
-            $user->save();
-            $response->getBody()->write(json_encode(array("rta" => "Usuario guardado correctamente")));
             return $response;
         } catch (\Illuminate\Database\QueryException $e) {
             $error_code = $e->errorInfo[1];
-            /*  if($error_code == 1062){
-                    self::delete($lid);
-                    return 'houston, we have a duplicate entry problem';
-                } */
             $response->getBody()->write((string)$error_code);
             return $response;
         } catch (\Throwable $th) {
@@ -51,46 +42,33 @@ class UserController
         }
     }
 
-    function moveUploadedFile(string $directory, UploadedFileInterface $uploadedFile)
-    {
-        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-
-        // see http://php.net/manual/en/function.random-bytes.php
-        $basename = bin2hex(random_bytes(8));
-        $filename = sprintf('%s.%0.8s', $basename, $extension);
-
-        $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-
-        return $filename;
-    }
-
     public function LogIn(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         try {
             $body = $request->getParsedBody();
-            $legajo = $body["legajo"] ?? '';
-            if (strlen($legajo) > 0) {
-                $user = User::select('legajo')->where('legajo', $legajo)->first();
-                if (isset($user)) {
-                    $email = $body["email"] ?? '';
-                    if (strlen($email) > 0) {
-                        if (!User::find($email)) {
-                            $response->getBody()->write(json_encode(array('message' => "email incorrecto")));
-                        } else {
-                            $token = iToken::encodeUserToken($email, $legajo);
-                        }
-                    } else {
-                        $response->getBody()->write(json_encode(array("error" => "Debe ingresar un email")));
-                    }
+            $email = $body["email"] ?? '';
+            if (strlen($email) > 0) {
+                $user = User::where('email',$email)->get();
+                //var_dump($user[0]['tipo_usuario']);
+                if ($user == null) {
+                    $response->getBody()->write(json_encode(array('message' => "Wrong email")));
                 } else {
-                    $response->getBody()->write(json_encode(array("error" => "Usuario no existe")));
+                    $password = $body["password"] ?? '';
+                    if (strlen($password) > 0) {
+                        $token = iToken::encodeUserToken($email, $password, $user[0]['tipo_usuario']);
+                        if (isset($token)){
+                            $response->getBody()->write(json_encode($token));
+                        }else{
+                            $response->getBody()->write(json_encode(array("error" => "Something goes wrong. Please, check your credentials")));
+                        }
+                    }else{
+                        $response->getBody()->write(json_encode(array("error" => "You must set a password")));
+                    }
                 }
             } else {
-                $response->getBody()->write(json_encode(array("token" => "Debe ingresar un legajo")));
-                return $response;
+                $response->getBody()->write(json_encode(array("error" => "You must set an email")));
             }
-
-            if (isset($token)) $response->getBody()->write(json_encode($token));
+            
             return $response;
         } catch (\Throwable $th) {
             $response->getBody()->write($th->getMessage());
