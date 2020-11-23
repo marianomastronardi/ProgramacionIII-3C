@@ -24,6 +24,7 @@ class TurnoController
             $body = $request->getParsedBody();
 
             if (strlen($body['fecha_turno'] ?? '') > 0) {
+                //$date = date('Y/m/d H:i',strtotime($body["fecha"]));
                 $shiftDate = new DateTime($body['fecha_turno']);
                 $shiftDate->format('d/m/Y H:i:s');
                 //Valido la Hora

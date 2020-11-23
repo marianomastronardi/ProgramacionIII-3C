@@ -19,7 +19,7 @@ class UserController
 
         //$response->getBody()->write("Hello world from POST!");
         try {
-            $directory =  __DIR__ . '/../../img';
+            //$directory =  __DIR__ . '/../../img';
             $body = $request->getParsedBody();
             $user = new User;
             $user->email = $body["email"];
@@ -27,13 +27,15 @@ class UserController
             $user->password = password_hash($body["password"], PASSWORD_BCRYPT);
 
             //foto
-            if (!is_dir($directory)) mkdir($directory);
+            //if (!is_dir($directory)) mkdir($directory);
             $uploadedFiles = $request->getUploadedFiles();
             $uploadedFile = $uploadedFiles['foto'];
-            if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-                $filename = $this->moveUploadedFile($directory, $uploadedFile);
-            }
-            $user->foto = dirname(dirname(__DIR__, 1)) . '\\img\\' . $filename; //$body["foto"];
+            var_dump($uploadedFile);
+            if($uploadedFile) $user->foto = serialize($uploadedFile);
+            //if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            //    $filename = $this->moveUploadedFile($directory, $uploadedFile);
+            //}
+            //$user->foto = dirname(dirname(__DIR__, 1)) . '\\img\\' . $filename; //$body["foto"];
             $user->save();
             $response->getBody()->write(json_encode(array("rta" => "Usuario guardado correctamente")));
             return $response;
@@ -132,6 +134,12 @@ class UserController
             $user->password = $password;
             $user->tipo = $tipo;
 
+            //foto
+            $uploadedFiles = $request->getUploadedFiles();
+            $uploadedFile = $uploadedFiles['foto'];
+            var_dump($uploadedFile);
+            if($uploadedFile) $user->foto = serialize($uploadedFile);
+            
             //legajo
             $find = true;
             do {

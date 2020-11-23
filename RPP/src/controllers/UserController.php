@@ -87,6 +87,7 @@ class UserController
                     if(!password_verify($body["password"], $user->password)){
                         $response->getBody()->write(json_encode(array('message'=> "Contraseña incorrecta")));
                     }else{
+                        var_dump($user);
                         $token = iToken::encodeUserToken($user->email, $user->password, $user->tipo_usuario);
                     }
                 }else{
